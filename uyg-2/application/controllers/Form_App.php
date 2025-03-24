@@ -18,17 +18,18 @@ class Form_App extends CI_Controller
     {
 
         /* Form Validation İşlemleri */
+        /* Form Validasyon İşlemi: Formdan gelen verinin Controller seviyesinde bir kontrolünü gerçekleştirir. */
 
-        /* Form Validation Kütüphanesinin Yüklenmesi */
+        /* 1.Form Validation Kütüphanesinin Yüklenmesi */
         $this->load->library("form_validation");
 
-        /* Form Validation Kuralları */
+        /* 2. Kurallar Yazılır. */
         $this->form_validation->set_rules("name", "İsim", "required|trim");
         $this->form_validation->set_rules("surname", "Soyadı", "required|trim");
         $this->form_validation->set_rules("password", "Kullanıcı Şifresi", "required|trim|min_length[3]|max_length[12]");
 
 
-        /* Hata Mesajları */
+        /* 3. Validasyon işlemi başarısız olursa kullanıcıya verilecek mesajlar tanımlanır. */
         $this->form_validation->set_message(
             array(
                 "required" => "{field} alanının doldurulması zorunludur.",
@@ -38,8 +39,15 @@ class Form_App extends CI_Controller
         );
 
 
+        /* 4. Validasyon çalıştırılırak bir sonuç bir değişkene atanır. */
         $validate = $this->form_validation->run();
+
+
+        /* 5. Validasyonun durumuna göre aksiyon alınır. */
+
         if ($validate) {
+            /* Form içeriği validasyondan başarıyla geçtiyse: */
+
             $data = array(
                 "name" => $this->input->post("name"),
                 "surname" => $this->input->post("surname"),
@@ -55,7 +63,9 @@ class Form_App extends CI_Controller
                 redirect("form_app");
             }
         } else {
-            /* Validasyon Geçilmediğinde Hatanın Gösterilmesi */
+            /* Form içeriği validasyondan geçemediyse: */
+            /*echo "Formda Hata var"; */
+
             $view_data = new stdClass();
             $view_data->form_error = true;
             $this->load->view("form_v", $view_data);
