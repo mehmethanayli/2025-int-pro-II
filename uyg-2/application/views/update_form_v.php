@@ -86,48 +86,59 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </head>
 
 <body>
-	<a href="<?php echo base_url("form_app/new_form") ?>">
-		<button> Yeni Ekle </button>
-	</a>
 
+	<?php print_r($item); ?>
 	<div id="container">
-		<h1>Kayıtlı Kullanıcıların Listesi:</h1>
+		<h1>Kullanıcı Güncelleme İşlemi</h1>
 
 		<div id="body">
-			<table border="1px">
-				<thead>
-					<tr>
-						<th>İd</th>
-						<th>İsim</th>
-						<th>Soyisim</th>
-						<th>Kullanıcı Adı</th>
-						<th>Şifre</th>
-						<th>İşlemler</th>
-					</tr>
-				</thead>
+			<p>Lütfen aşağıdaki formu doldurunuz!</p>
+			<form action="<?php echo base_url("form_app/update/$item->id") ?>" method="post">
+				<code>
+					<label for="name">Adınız: </label>
+					<!-- Value Değeri İçin Repopulate İşlemi Gerçekleştirildi -->
+					<input type="text" name="name" id="name" 
+					value="<?php echo isset($form_error) ? set_value("name") : "$item->name" ?>">
+					<?php
+					/* İlgili Input için hata mesajı hazırlandı. */
+					if (isset($form_error)) {
+						echo form_error("name");
+					}
+					?>
 
-				<tbody>
+				</code>
 
-					<?php foreach ($items as $item) { ?>
-
-						<tr>
-							<td><?php echo $item->id; ?></td>
-							<td><?php echo $item->name; ?></td>
-							<td><?php echo $item->surname; ?></td>
-							<td><?php echo $item->username; ?></td>
-							<td><?php echo $item->password; ?></td>
-							<td>
-								<a href="<?php echo base_url("form_app/delete/$item->id") ?>">Sil</a>
-								<a href="<?php echo base_url("form_app/update_form/$item->id") ?>">Güncelle</a>
-							</td>
-						</tr>
-
-					<?php } ?>
-
-				</tbody>
+				<code>
+					<label for="surname">Soyadınız: </label>
+					<input type="text" name="surname" id="surname"
+					value="<?php echo isset($form_error) ? set_value("surname") : "$item->surname" ?>">
+					<?php
+					if (isset($form_error)) {
+						echo form_error("surname");
+					}
+					?>
+				</code>
 
 
-			</table>
+				<code>
+					<label for="uname">Kullanıcı Adı:</label>
+					<input type="text" name="username" id="uname" value ="<?php echo $item->username; ?>">
+				</code>
+
+				<code>
+					<label for="pass">Şifre:</label>
+					<input type="password" value="<?php echo $item->password; ?>" name="password" id="pass">
+					<?php
+					if (isset($form_error)) {
+						echo form_error("password");
+					}
+					?>
+				</code>
+
+				<input type="submit" value="Kullanıcıyı Güncelle">
+			</form>
+			<br>
+
 		</div>
 
 	</div>

@@ -18,4 +18,20 @@ class Form_App_Model extends CI_Model
     {
         return $this->db->get($this->table_name)->result();
     }
+
+    /* Koşula göre tekbir kaydı getiren fonksiyon. */
+    public function get($where = array())
+    {
+        return $this->db->where($where)->get($this->table_name)->row();
+    }
+
+    public function update($where = array(), $data = array())
+    {
+        return $this->db->where($where)->update($this->table_name, $data);
+    }
+
+    public function delete($where = array())
+    {
+        return $this->db->where($where)->delete($this->table_name);
+    }
 }

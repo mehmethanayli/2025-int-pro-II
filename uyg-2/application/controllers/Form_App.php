@@ -12,7 +12,22 @@ class Form_App extends CI_Controller
     /* Kayıt formunun ekrana basılmasını sağlayan fonksiyon. */
     public function index()
     {
-        $this->load->view("form_v");
+        $data = $this->Form_App_Model->get_all();
+
+        $viewData = array(
+            "items" => $data
+        );
+
+        /* Dönderilecek verilerin kontrol edilmesi */
+        // print_r($viewData);
+
+        /* Verilerin Gönderilmesi */
+        $this->load->view("list_v", $viewData);
+    }
+
+    public function new_form()
+    {
+        $this->load->view("new_form_v");
     }
     public function insert()
     {
@@ -58,8 +73,6 @@ class Form_App extends CI_Controller
             /* Form Verileri Validasyon Geçerse Kayıt İşlemi Yapılacak */
             $insert = $this->Form_App_Model->insert($data);
             if ($insert) {
-                redirect("form_app/list");
-            } else {
                 redirect("form_app");
             }
         } else {
@@ -68,25 +81,59 @@ class Form_App extends CI_Controller
 
             $view_data = new stdClass();
             $view_data->form_error = true;
-            $this->load->view("form_v", $view_data);
+            $this->load->view("new_form_v", $view_data);
 
         }
 
     }
 
-    public function list()
+    public function update_form($id)
     {
-        $data = $this->Form_App_Model->get_all();
-
-        $viewData = array(
-            "items" => $data
+        $where = array(
+            "id" => $id
         );
 
-        /* Dönderilecek verilerin kontrol edilmesi */
-        // print_r($viewData);
+        $item = $this->Form_App_Model->get($where);
+        //print_r($item);
 
-        /* Verilerin Gönderilmesi */
-        $this->load->view("list_v", $viewData);
+        $view_data = new stdClass();
+        $view_data->item = $item;
+
+        $this->load->view("update_form_v", $view_data);
+
     }
+
+    public function update($id)
+    {
+        $where = array(
+            "id" => $id
+        );
+
+        $data = array(
+            "name" => $this->input->post("name"),
+            "surname" => $this->input->post("surname"),
+            "username" => $this->input->post("username"),
+            "password" => md5($this->input->post("password"))
+        );
+
+        $update = $this->Form_App_Model->update($where, $data);
+        if ($update) {
+            redirect("form_app");
+        }
+
+    }
+
+
+    public function delete($id)
+    {
+        $where = array(
+            "id" => $id
+        );
+        $delete = $this->Form_App_Model->delete($where);
+        if ($delete) {
+            redirect("form_app");
+        }
+    }
+
 }
 ;
